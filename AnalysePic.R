@@ -17,7 +17,8 @@ Div_Raster<- function (Size, Div_const){
   return (Div_Frame)
 }
 
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
+#img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
+img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
 y_Pixel<-img[,1,1]
 x_Size<-length(x_Pixel)
@@ -28,21 +29,21 @@ y_Grid<-Div_Raster(y_Size, 16)
 
 #next function
 newArray <- c(0)
-Cluster_img<-array(c(img,newArray),dim = c(853,1280,4))
-i_piy<-1
-i_pix<-1
+Cluster_img<-array(c(img,newArray),dim = c(y_Size,x_Size,4))
+i_piy<-0
+i_pix<-0
 
 while(i_piy<= y_Size){ 'move on y axis'
-  i_pix = 1;
+  i_pix = 0;
   while (i_pix<= x_Size){ 'move on x axis'
-    i_grid = 1;
+    i_grid = 0;
     while(i_grid< length(x_Grid)){ 'check which raster in X'
       if((i_pix >= (x_Grid[i_grid]))&&(i_pix < (x_Grid[i_grid+1]))){ 'part of a x raster'
       x_CharPos<- x_Grid[i_grid];
       }
       i_grid = i_grid+1;'increment raster x value'
     }
-    i_grid = 1;
+    i_grid = 0;
     while(i_grid< length(y_Grid)){ 'check which raster in y'
       if((i_piy >= (y_Grid[i_grid]))&&(i_piy < (y_Grid[i_grid+1]))){ 'part of a y raster'
       y_CharPos<-  y_Grid[i_grid];
@@ -55,10 +56,25 @@ while(i_piy<= y_Size){ 'move on y axis'
 i_piy = i_piy+1;
 }
 
-Cluster_result<-describeBy(as.numeric(Cluster_img[,,3]), group = Cluster_img[,,4],mat=TRUE)
-unlist(strsplit(as.character( Cluster_result$group1), "/"))
-ggplot(Cluster_result, aes(x=group1,y=median))+
-  geom_point()
+Cluster_result1<-describeBy(as.numeric(Cluster_img[,,1]), group = Cluster_img[,,4],mat=TRUE)
+sort(Cluster_result1$group1)
+Cluster_result2<-describeBy(as.numeric(Cluster_img[,,2]), group = Cluster_img[,,4],mat=TRUE)
+sort(Cluster_result2$group1)
+Cluster_result3<-describeBy(as.numeric(Cluster_img[,,3]), group = Cluster_img[,,4],mat=TRUE)
+sort(Cluster_result3$group1)
+RowCol<-matrix(unlist(strsplit(as.character( Cluster_result3$group1 ), "/")),ncol=2, byrow=TRUE)
+RowCol<- as.data.frame(RowCol)
+RowCol1<- cbind(as.numeric(levels(RowCol$V1))[RowCol$V1],
+            as.numeric(levels(RowCol$V2))[RowCol$V2])
+Cluster_result <- cbind.data.frame(Cluster_result1$median,Cluster_result2$median,Cluster_result3$median,RowCol1
+                                   )
+colnames(Cluster_result)<-c("pic_red","pic_green","pic_blue","Xaxis","Yaxis")
+
+
+ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
+  geom_tile(aes(fill=rgb(pic_red,pic_green,pic_blue)))+
+  scale_fill_identity()+
+  theme_minimal()
 
 
 #this will display your image to test you read it correctly
