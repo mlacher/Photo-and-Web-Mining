@@ -3,6 +3,7 @@
 
 library(jpeg)
 library(ggplot2)
+library(psych)
 #####Functions##############################
 #Create Mask for Divider Frames
 Div_Raster<- function (Size, Div_const){
@@ -25,41 +26,40 @@ x_Grid<-Div_Raster(x_Size, 20)
 y_Grid<-Div_Raster(y_Size, 16)
 
 
-while(y_Pixel<y_Size){ 'move on y axis'
-  while (x_Pixel[i_pix]<x_Size){ 'move on x axis'
-    while(i_count< length(x_Grid)){ 'check which raster in X'
-      if((x_Pixel[i_pix] >= (x_Grid[i_grid]))&&(x_Pixel < (x_Grid[i_grid+1]))){ 'part of a x raster'
-      img_grid<- rbind(img_grid,) 
+#next function
+newArray <- c(0)
+Cluster_img<-array(c(img,newArray),dim = c(853,1280,4))
+i_piy<-1
+i_pix<-1
+
+while(i_piy<= y_Size){ 'move on y axis'
+  i_pix = 1;
+  while (i_pix<= x_Size){ 'move on x axis'
+    i_grid = 1;
+    while(i_grid< length(x_Grid)){ 'check which raster in X'
+      if((i_pix >= (x_Grid[i_grid]))&&(i_pix < (x_Grid[i_grid+1]))){ 'part of a x raster'
+      x_CharPos<- x_Grid[i_grid];
       }
       i_grid = i_grid+1;'increment raster x value'
     }
-    &&((pixel >= (Div_Framey[test-1]))&&(pixel < (Div_Framey[test])))){
-      #2D Arrary benötigt
-      #name(Div_Frame[0],Div_Frame[1],...)
-      #value1(1,1,...)
-      #value2(1,2,...)
-      #.....
+    i_grid = 1;
+    while(i_grid< length(y_Grid)){ 'check which raster in y'
+      if((i_piy >= (y_Grid[i_grid]))&&(i_piy < (y_Grid[i_grid+1]))){ 'part of a y raster'
+      y_CharPos<-  y_Grid[i_grid];
+      }
+      i_grid = i_grid+1;'increment raster y value'
     }
-    i_pix = i_pix +1;
+  Cluster_img[i_piy,i_pix,4]<- paste(x_CharPos,y_CharPos,sep="/");
+  i_pix = i_pix +1;
   }
-  pixel_x = pixel_x+1;
-}
-pixel_y = pixel_y+1;  
+i_piy = i_piy+1;
 }
 
+Cluster_result<-describeBy(as.numeric(Cluster_img[,,3]), group = Cluster_img[,,4],mat=TRUE)
+unlist(strsplit(as.character( Cluster_result$group1), "/"))
+ggplot(Cluster_result, aes(x=group1,y=median))+
+  geom_point()
 
-
-
-
-
-
-
-img_BLUE<-img
-img_RED <-img
-img_GREEN<-img
-img_BLUE[,,1:2]<-0
-img_RED[,,2:3]<-0
-img_GREEN[,,c(1,3)]<-0
 
 #this will display your image to test you read it correctly
 if(exists("rasterImage")){
@@ -67,9 +67,3 @@ if(exists("rasterImage")){
   rasterImage(img,1,1,2,2)
 }
 
-
-plot(img[,,2])
-
-plot(density(img[,,2]),col="darkgreen")
-lines(density(img[,,1]),col="red")
-lines(density(img[,,3]),col="blue")
