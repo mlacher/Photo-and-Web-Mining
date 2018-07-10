@@ -12,7 +12,7 @@ library(fmsb)
 #3. Color Scheme
 
 ############################################MAIN################################################
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
+img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
 
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
@@ -36,9 +36,11 @@ Cluster_result <- cbind.data.frame(Cluster_result1$median,
                                    Cluster_result2$median,
                                    Cluster_result3$median,
                                    Cluster_result1$sd,
+                                   Cluster_result2$sd,
+                                   Cluster_result3$sd,
                                    RowCol1
                                    )
-colnames(Cluster_result)<-c("med_red","med_green","med_blue","sd","Xaxis","Yaxis")
+colnames(Cluster_result)<-c("med_red","med_green","med_blue","sd_red","sd_green","sd_blue","Xaxis","Yaxis")
 Cluster_result$Yaxis<-Cluster_result$Yaxis*-1
 
 ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
@@ -51,8 +53,8 @@ ggplot(Cluster_result, aes(x=(med_red+med_green+med_blue)/3))+
   scale_fill_identity()+
   theme_minimal()
 
-ggplot(Cluster_result, aes(x=as.character(Yaxis), y = sd))+
-  geom_boxplot()+
+ggplot(Cluster_result, aes(x= Yaxis, y = (sd_red+sd_blue+sd_green)/3))+
+  geom_smooth()+
   theme_minimal()
 
 
