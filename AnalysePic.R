@@ -10,7 +10,7 @@ Div_Raster<- function (Size, Div_const){
   i=0
   Div_count<- Size/Div_const
   Div_Frame<-c(0)
-  while (i < Div_const){
+  while (i <= Div_const){
     i=i+1;
     Div_Frame=rbind(Div_Frame,Div_count+Div_Frame[i-1]);
   }
@@ -56,8 +56,8 @@ x_Pixel<-img[1,,1]
 y_Pixel<-img[,1,1]
 x_Size<-length(x_Pixel)
 y_Size<-length(y_Pixel)
-x_Grid<-Div_Raster(x_Size, 20)
-y_Grid<-Div_Raster(y_Size, 16)
+x_Grid<-Div_Raster(x_Size, 40)
+y_Grid<-Div_Raster(y_Size, 22)
 
 img_c<-Clustered_Pic(img,y_Size,x_Size)
 
