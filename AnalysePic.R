@@ -5,11 +5,14 @@ library(jpeg)
 library(ggplot2)
 library(psych)
 library(img.compression)
+library(fmsb)
 #####Functions##############################
-
+#1. Pic Format
+#2. Pic Structure
+#3. Color Scheme
 
 ############################################MAIN################################################
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
+img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test2.jpg")
 
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
@@ -47,9 +50,8 @@ ggplot(Cluster_result, aes(x=(med_red+med_green+med_blue)/3))+
   scale_fill_identity()+
   theme_minimal()
 
-ggplot(Cluster_result, aes(x=med_blue/med_red, y = med_red/med_green))+
-  geom_point()+
-
+ggplot(Cluster_result, aes(x=med_blue, y = med_red))+
+  geom_point(aes(color=med_green))+
   theme_minimal()
 
 
@@ -58,4 +60,6 @@ if(exists("rasterImage")){
   plot(1:2, type='n')
   rasterImage(img,1,1,2,2)
 }
+
+  rgb(Cluster_result$med_blue, Cluster_result$med_red, Cluster_result$med_green, maxColorValue=1)
 
