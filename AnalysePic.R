@@ -9,15 +9,15 @@ library(img.compression)
 
 
 ############################################MAIN################################################
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test2.jpg")
+img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
 
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
 y_Pixel<-img[,1,1]
 x_Size<-length(x_Pixel)
 y_Size<-length(y_Pixel)
-x_Grid<-Div_Raster(x_Size, 40)
-y_Grid<-Div_Raster(y_Size, 22)
+x_Grid<-Div_Raster(x_Size, 20)
+y_Grid<-Div_Raster(y_Size, 16)
 
 img_c<-Clustered_Pic(img,y_Size,x_Size)
 
@@ -42,8 +42,15 @@ ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   scale_fill_identity()+
   theme_minimal()
 
-ggplot(Cluster_result, aes(x=Xaxis,y=Yaxis))+
-  geom_point(aes(size = sd, color = sd))
+ggplot(Cluster_result, aes(x=(med_red+med_green+med_blue)/3))+
+  geom_histogram(aes(fill=rgb(med_red,med_green,med_blue)))+
+  scale_fill_identity()+
+  theme_minimal()
+
+ggplot(Cluster_result, aes(x=med_blue/med_red, y = med_red/med_green))+
+  geom_point()+
+
+  theme_minimal()
 
 
 #this will display your image to test you read it correctly
