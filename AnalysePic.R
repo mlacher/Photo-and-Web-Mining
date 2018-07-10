@@ -12,15 +12,16 @@ library(fmsb)
 #3. Color Scheme
 
 ############################################MAIN################################################
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test2.jpg")
+img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
 
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
 y_Pixel<-img[,1,1]
 x_Size<-length(x_Pixel)
 y_Size<-length(y_Pixel)
+
 x_Grid<-Div_Raster(x_Size, 20)
-y_Grid<-Div_Raster(y_Size, 16)
+y_Grid<-Div_Raster(y_Size, 18)
 
 img_c<-Clustered_Pic(img,y_Size,x_Size)
 
@@ -50,8 +51,8 @@ ggplot(Cluster_result, aes(x=(med_red+med_green+med_blue)/3))+
   scale_fill_identity()+
   theme_minimal()
 
-ggplot(Cluster_result, aes(x=med_blue, y = med_red))+
-  geom_point(aes(color=med_green))+
+ggplot(Cluster_result, aes(x=as.character(Yaxis), y = sd))+
+  geom_boxplot()+
   theme_minimal()
 
 
