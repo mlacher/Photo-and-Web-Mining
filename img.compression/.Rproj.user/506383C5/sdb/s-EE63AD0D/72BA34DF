@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#https://alstatr.blogspot.com/2014/09/r-image-analysis-using-ebimage.html\n#https://www.kandooadventures.com/news-and-views/top-10-instagram-landscape-photographers/\n\nlibrary(jpeg)\nlibrary(ggplot2)\nlibrary(psych)\nlibrary(img.compression)\nlibrary(fmsb)\nlibrary(gridExtra)\n#####Functions##############################\n#1. Pic Format\n#2. Pic Structure\n#3. Color Scheme\n\n############################################MAIN################################################\n#img <- readJPEG(\"C:/Users/maximilian.lacher/Downloads/sunset.jpg\")\n\nimg <- readJPEG(\"E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg\")\nx_Pixel<-img[1,,1]\ny_Pixel<-img[,1,1]\nx_Size<-length(x_Pixel)\ny_Size<-length(y_Pixel)\n\nx_Grid<-Div_Raster(x_Size, 20)\ny_Grid<-Div_Raster(y_Size, 18)\n\nimg_c<-Clustered_Pic(img,y_Size,x_Size)\n\nCluster_result1<-describeBy(as.numeric(img_c[,,1]), group = img_c[,,4],mat=TRUE)\nCluster_result2<-describeBy(as.numeric(img_c[,,2]), group = img_c[,,4],mat=TRUE)\nCluster_result3<-describeBy(as.numeric(img_c[,,3]), group = img_c[,,4],mat=TRUE)\nRowCol<-matrix(unlist(strsplit(as.character( Cluster_result3$group1 ), \"/\")),ncol=2, byrow=TRUE)\nRowCol<- as.data.frame(RowCol)\nRowCol1<- cbind(as.numeric(levels(RowCol$V1))[RowCol$V1],\n            as.numeric(levels(RowCol$V2))[RowCol$V2])\nCluster_result <- cbind.data.frame(Cluster_result1$median,\n                                   Cluster_result2$median,\n                                   Cluster_result3$median,\n                                   Cluster_result1$sd,\n                                   Cluster_result2$sd,\n                                   Cluster_result3$sd,\n                                   RowCol1\n                                   )\ncolnames(Cluster_result)<-c(\"med_red\",\"med_green\",\"med_blue\",\"sd_red\",\"sd_green\",\"sd_blue\",\"Xaxis\",\"Yaxis\")\nCluster_result$Yaxis<-Cluster_result$Yaxis*-1\n\nggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+\n  geom_tile(aes(fill=rgb(med_red,med_green,med_blue)))+\n  scale_fill_identity()+\n  theme_minimal()\n\nggplot(Cluster_result, aes(x=(med_red+med_green+med_blue)/3))+\n  geom_histogram(aes(fill=rgb(med_red,med_green,med_blue)))+\n  scale_fill_identity()+\n  theme_minimal()\n\np1<- ggplot(Cluster_result, aes(x= Yaxis, y = (sd_red+sd_blue+sd_green)/3))+\n  geom_smooth()+\n  theme_minimal()\n\np2<- ggplot(Cluster_result, aes(x= Xaxis, y = (sd_red+sd_blue+sd_green)/3))+\n  geom_smooth()+\n  theme_minimal()\n\ncombo.box <- grid.arrange(p1,p2, nrow = 2)\n\n#this will display your image to test you read it correctly\nif(exists(\"rasterImage\")){\n  plot(1:2, type='n')\n  rasterImage(img,1,1,2,2)\n}\n\n  rgb(Cluster_result$med_blue, Cluster_result$med_red, Cluster_result$med_green, maxColorValue=1)\n\n\n",
+    "created" : 1531245426501.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3888622596",
+    "id" : "72BA34DF",
+    "lastKnownWriteTime" : 1531249303,
+    "last_content_update" : 1531249303215,
+    "path" : "~/GitHub/Photo-and-Web-Mining/AnalysePic.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

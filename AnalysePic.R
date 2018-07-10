@@ -1,20 +1,21 @@
 #https://alstatr.blogspot.com/2014/09/r-image-analysis-using-ebimage.html
-
+#https://www.kandooadventures.com/news-and-views/top-10-instagram-landscape-photographers/
 
 library(jpeg)
 library(ggplot2)
 library(psych)
 library(img.compression)
 library(fmsb)
+library(gridExtra)
 #####Functions##############################
 #1. Pic Format
 #2. Pic Structure
 #3. Color Scheme
 
 ############################################MAIN################################################
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
+#img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
 
-#img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
+img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
 y_Pixel<-img[,1,1]
 x_Size<-length(x_Pixel)
@@ -53,10 +54,15 @@ ggplot(Cluster_result, aes(x=(med_red+med_green+med_blue)/3))+
   scale_fill_identity()+
   theme_minimal()
 
-ggplot(Cluster_result, aes(x= Yaxis, y = (sd_red+sd_blue+sd_green)/3))+
+p1<- ggplot(Cluster_result, aes(x= Yaxis, y = (sd_red+sd_blue+sd_green)/3))+
   geom_smooth()+
   theme_minimal()
 
+p2<- ggplot(Cluster_result, aes(x= Xaxis, y = (sd_red+sd_blue+sd_green)/3))+
+  geom_smooth()+
+  theme_minimal()
+
+combo.box <- grid.arrange(p1,p2, nrow = 2)
 
 #this will display your image to test you read it correctly
 if(exists("rasterImage")){
@@ -65,4 +71,5 @@ if(exists("rasterImage")){
 }
 
   rgb(Cluster_result$med_blue, Cluster_result$med_red, Cluster_result$med_green, maxColorValue=1)
+
 
