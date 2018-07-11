@@ -13,7 +13,7 @@ library(gridExtra)
 #3. Color Scheme
 
 ############################################MAIN################################################
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
+img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test3.jpg")
 #
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
@@ -46,20 +46,22 @@ Cluster_result$Yaxis<-Cluster_result$Yaxis*-1
 Cluster_result<-cbind.data.frame(Cluster_result,(Cluster_result$sd_red+
                                                    Cluster_result$sd_green+
                                                    Cluster_result$sd_blue)/3)
-
 colnames(Cluster_result)<-c("med_red","med_green","med_blue",
                             "sd_red","sd_green","sd_blue",
                             "Xaxis","Yaxis","sd_mean")
+Cluster_result$sd_mean[is.infinite(Cluster_result$sd_mean)]<-0
+
+dat[,1][is.infinite(dat[,1])] = NA
+
 ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   geom_tile(aes(fill=rgb(med_red,med_green,med_blue)))+
   scale_fill_identity()+
   theme_minimal()
 
 
-
-
 ggplot(Cluster_result, aes(x= Xaxis, y = Yaxis))+
-  geom_tile(aes(fill=(sd_mean)/max(sd_mean)),size = 7)+
+  geom_tile(aes(fill=(sd_mean/(max(sd_mean)))),size = 7)+
+  scale_fill_gradient(low = "white", high = "black")+
   theme_minimal()
 
 
