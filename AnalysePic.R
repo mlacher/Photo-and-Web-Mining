@@ -13,9 +13,9 @@ library(gridExtra)
 #3. Color Scheme
 
 ############################################MAIN################################################
-#img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
-
-img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
+img <- readJPEG("C:/Users/maximilian.lacher/Downloads/sunset.jpg")
+#
+#img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
 y_Pixel<-img[,1,1]
 x_Size<-length(x_Pixel)
@@ -36,31 +36,33 @@ RowCol1<- cbind(as.numeric(levels(RowCol$V1))[RowCol$V1],
 Cluster_result <- cbind.data.frame(Cluster_result1$median,
                                    Cluster_result2$median,
                                    Cluster_result3$median,
-                                   Cluster_result1$sd,
-                                   Cluster_result2$sd,
-                                   Cluster_result3$sd,
+                                   Cluster_result1$sd/Cluster_result1$median,
+                                   Cluster_result2$sd/Cluster_result2$median,
+                                   Cluster_result3$sd/Cluster_result3$median,
                                    RowCol1
                                    )
 colnames(Cluster_result)<-c("med_red","med_green","med_blue","sd_red","sd_green","sd_blue","Xaxis","Yaxis")
 Cluster_result$Yaxis<-Cluster_result$Yaxis*-1
+Cluster_result<-cbind.data.frame(Cluster_result,(Cluster_result$sd_red+
+                                                   Cluster_result$sd_green+
+                                                   Cluster_result$sd_blue)/3)
 
+colnames(Cluster_result)<-c("med_red","med_green","med_blue",
+                            "sd_red","sd_green","sd_blue",
+                            "Xaxis","Yaxis","sd_mean")
 ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   geom_tile(aes(fill=rgb(med_red,med_green,med_blue)))+
   scale_fill_identity()+
   theme_minimal()
 
-ggplot(Cluster_result, aes(x=(med_red+med_green+med_blue)/3))+
-  geom_histogram(aes(fill=rgb(med_red,med_green,med_blue)))+
-  scale_fill_identity()+
+
+
+
+ggplot(Cluster_result, aes(x= Xaxis, y = Yaxis))+
+  geom_tile(aes(fill=(sd_mean)/max(sd_mean)),size = 7)+
   theme_minimal()
 
-p1<- ggplot(Cluster_result, aes(x= Yaxis, y = (sd_red+sd_blue+sd_green)/3))+
-  geom_smooth()+
-  theme_minimal()
 
-p2<- ggplot(Cluster_result, aes(x= Xaxis, y = (sd_red+sd_blue+sd_green)/3))+
-  geom_smooth()+
-  theme_minimal()
 
 combo.box <- grid.arrange(p1,p2, nrow = 2)
 
