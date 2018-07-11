@@ -37,14 +37,14 @@ Clustered_Pic<- function(Pic,y_Size,x_Size){
       i_grid = 0;
       while(i_grid< length(x_Grid)){ 'check which raster in X'
         if((i_pix >= (x_Grid[i_grid]))&&(i_pix < (x_Grid[i_grid+1]))){ 'part of a x raster'
-          x_CharPos<- x_Grid[i_grid];
+          x_CharPos<- i_grid;
         }
         i_grid = i_grid+1;'increment raster x value'
       }
       i_grid = 0;
       while(i_grid< length(y_Grid)){ 'check which raster in y'
         if((i_piy >= (y_Grid[i_grid]))&&(i_piy < (y_Grid[i_grid+1]))){ 'part of a y raster'
-          y_CharPos<-  y_Grid[i_grid];
+          y_CharPos<-  i_grid;
         }
         i_grid = i_grid+1;'increment raster y value'
       }
