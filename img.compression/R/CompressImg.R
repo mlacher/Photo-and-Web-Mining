@@ -13,6 +13,8 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
+#This Function defines the Raster Size
+library(psych)
 Div_Raster<- function (Size, Div_const){
   i=0
   Div_count<- Size/Div_const
@@ -52,4 +54,34 @@ Clustered_Pic<- function(Pic,y_Size,x_Size){
     i_piy = i_piy+1;
   }
   return(Raster_Pic)
+}
+
+#to the math
+Analyse_Pic <- function (Pic){
+  library(psych)
+  Cluster_result1<-describeBy(as.numeric(Pic[,,1]), group = Pic[,,4],mat=TRUE)
+  Cluster_result2<-describeBy(as.numeric(Pic[,,2]), group = Pic[,,4],mat=TRUE)
+  Cluster_result3<-describeBy(as.numeric(Pic[,,3]), group = Pic[,,4],mat=TRUE)
+  RowCol<-matrix(unlist(strsplit(as.character( Cluster_result3$group1 ), "/")),ncol=2, byrow=TRUE)
+  RowCol<- as.data.frame(RowCol)
+  RowCol1<- cbind(as.numeric(levels(RowCol$V1))[RowCol$V1],
+                as.numeric(levels(RowCol$V2))[RowCol$V2])
+  Cluster_result <- cbind.data.frame(Cluster_result1$median,
+                                   Cluster_result2$median,
+                                   Cluster_result3$median,
+                                   Cluster_result1$sd/Cluster_result1$median,
+                                   Cluster_result2$sd/Cluster_result2$median,
+                                   Cluster_result3$sd/Cluster_result3$median,
+                                   RowCol1
+  )
+  colnames(Cluster_result)<-c("med_red","med_green","med_blue","sd_red","sd_green","sd_blue","Xaxis","Yaxis")
+  Cluster_result$Yaxis<-Cluster_result$Yaxis*-1
+  Cluster_result<-cbind.data.frame(Cluster_result,(Cluster_result$sd_red+
+                                                   Cluster_result$sd_green+
+                                                   Cluster_result$sd_blue)/3)
+  colnames(Cluster_result)<-c("med_red","med_green","med_blue",
+                            "sd_red","sd_green","sd_blue",
+                            "Xaxis","Yaxis","sd_mean")
+  Cluster_result$sd_mean[is.infinite(Cluster_result$sd_mean)]<-0
+  return(Cluster_result)
 }

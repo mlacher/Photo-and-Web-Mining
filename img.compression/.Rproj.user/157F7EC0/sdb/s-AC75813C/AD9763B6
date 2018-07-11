@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# Hello, world!\n#\n# This is an example function named 'hello'\n# which prints 'Hello, world!'.\n#\n# You can learn more about package authoring with RStudio at:\n#\n#   http://r-pkgs.had.co.nz/\n#\n# Some useful keyboard shortcuts for package authoring:\n#\n#   Build and Reload Package:  'Ctrl + Shift + B'\n#   Check Package:             'Ctrl + Shift + E'\n#   Test Package:              'Ctrl + Shift + T'\n\n#This Function defines the Raster Size\nlibrary(psych)\nDiv_Raster<- function (Size, Div_const){\n  i=0\n  Div_count<- Size/Div_const\n  Div_Frame<-c(0)\n  while (i <= Div_const){\n    i=i+1;\n    Div_Frame=rbind(Div_Frame,Div_count+Div_Frame[i-1]);\n  }\n  return (Div_Frame)\n}\n\n#Create 4th Dimension including Raster\nClustered_Pic<- function(Pic,y_Size,x_Size){\n  newArray <- c(0)\n  Raster_Pic<-array(c(Pic,newArray),dim = c(y_Size,x_Size,4))\n  i_piy<-0\n  while(i_piy<= y_Size){ 'move on y axis'\n    i_pix = 0;\n    while (i_pix<= x_Size){ 'move on x axis'\n      i_grid = 0;\n      while(i_grid< length(x_Grid)){ 'check which raster in X'\n        if((i_pix >= (x_Grid[i_grid]))&&(i_pix < (x_Grid[i_grid+1]))){ 'part of a x raster'\n          x_CharPos<- x_Grid[i_grid];\n        }\n        i_grid = i_grid+1;'increment raster x value'\n      }\n      i_grid = 0;\n      while(i_grid< length(y_Grid)){ 'check which raster in y'\n        if((i_piy >= (y_Grid[i_grid]))&&(i_piy < (y_Grid[i_grid+1]))){ 'part of a y raster'\n          y_CharPos<-  y_Grid[i_grid];\n        }\n        i_grid = i_grid+1;'increment raster y value'\n      }\n      Raster_Pic[i_piy,i_pix,4]<- paste(x_CharPos,y_CharPos,sep=\"/\");\n      i_pix = i_pix +1;\n    }\n    i_piy = i_piy+1;\n  }\n  return(Raster_Pic)\n}\n\n#to the math\nAnalyse_Pic <- function (Pic){\n  library(psych)\n  Cluster_result1<-describeBy(as.numeric(Pic[,,1]), group = Pic[,,4],mat=TRUE)\n  Cluster_result2<-describeBy(as.numeric(Pic[,,2]), group = Pic[,,4],mat=TRUE)\n  Cluster_result3<-describeBy(as.numeric(Pic[,,3]), group = Pic[,,4],mat=TRUE)\n  RowCol<-matrix(unlist(strsplit(as.character( Cluster_result3$group1 ), \"/\")),ncol=2, byrow=TRUE)\n  RowCol<- as.data.frame(RowCol)\n  RowCol1<- cbind(as.numeric(levels(RowCol$V1))[RowCol$V1],\n                as.numeric(levels(RowCol$V2))[RowCol$V2])\n  Cluster_result <- cbind.data.frame(Cluster_result1$median,\n                                   Cluster_result2$median,\n                                   Cluster_result3$median,\n                                   Cluster_result1$sd/Cluster_result1$median,\n                                   Cluster_result2$sd/Cluster_result2$median,\n                                   Cluster_result3$sd/Cluster_result3$median,\n                                   RowCol1\n  )\n  colnames(Cluster_result)<-c(\"med_red\",\"med_green\",\"med_blue\",\"sd_red\",\"sd_green\",\"sd_blue\",\"Xaxis\",\"Yaxis\")\n  Cluster_result$Yaxis<-Cluster_result$Yaxis*-1\n  Cluster_result<-cbind.data.frame(Cluster_result,(Cluster_result$sd_red+\n                                                   Cluster_result$sd_green+\n                                                   Cluster_result$sd_blue)/3)\n  colnames(Cluster_result)<-c(\"med_red\",\"med_green\",\"med_blue\",\n                            \"sd_red\",\"sd_green\",\"sd_blue\",\n                            \"Xaxis\",\"Yaxis\",\"sd_mean\")\n  Cluster_result$sd_mean[is.infinite(Cluster_result$sd_mean)]<-0\n  return(Cluster_result)\n}\n",
+    "created" : 1531231258086.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "909665553",
+    "id" : "AD9763B6",
+    "lastKnownWriteTime" : 1531315780,
+    "last_content_update" : 1531315780415,
+    "path" : "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/img.compression/R/CompressImg.R",
+    "project_path" : "R/CompressImg.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

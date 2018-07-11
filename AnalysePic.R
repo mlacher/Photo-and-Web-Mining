@@ -13,7 +13,7 @@ library(gridExtra)
 #3. Color Scheme
 
 ############################################MAIN################################################
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test3.jpg")
+img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
 #
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 x_Pixel<-img[1,,1]
@@ -25,43 +25,17 @@ x_Grid<-Div_Raster(x_Size, 20)
 y_Grid<-Div_Raster(y_Size, 18)
 
 img_c<-Clustered_Pic(img,y_Size,x_Size)
-
-Cluster_result1<-describeBy(as.numeric(img_c[,,1]), group = img_c[,,4],mat=TRUE)
-Cluster_result2<-describeBy(as.numeric(img_c[,,2]), group = img_c[,,4],mat=TRUE)
-Cluster_result3<-describeBy(as.numeric(img_c[,,3]), group = img_c[,,4],mat=TRUE)
-RowCol<-matrix(unlist(strsplit(as.character( Cluster_result3$group1 ), "/")),ncol=2, byrow=TRUE)
-RowCol<- as.data.frame(RowCol)
-RowCol1<- cbind(as.numeric(levels(RowCol$V1))[RowCol$V1],
-            as.numeric(levels(RowCol$V2))[RowCol$V2])
-Cluster_result <- cbind.data.frame(Cluster_result1$median,
-                                   Cluster_result2$median,
-                                   Cluster_result3$median,
-                                   Cluster_result1$sd/Cluster_result1$median,
-                                   Cluster_result2$sd/Cluster_result2$median,
-                                   Cluster_result3$sd/Cluster_result3$median,
-                                   RowCol1
-                                   )
-colnames(Cluster_result)<-c("med_red","med_green","med_blue","sd_red","sd_green","sd_blue","Xaxis","Yaxis")
-Cluster_result$Yaxis<-Cluster_result$Yaxis*-1
-Cluster_result<-cbind.data.frame(Cluster_result,(Cluster_result$sd_red+
-                                                   Cluster_result$sd_green+
-                                                   Cluster_result$sd_blue)/3)
-colnames(Cluster_result)<-c("med_red","med_green","med_blue",
-                            "sd_red","sd_green","sd_blue",
-                            "Xaxis","Yaxis","sd_mean")
-Cluster_result$sd_mean[is.infinite(Cluster_result$sd_mean)]<-0
-
-dat[,1][is.infinite(dat[,1])] = NA
+Cluster_result<-Analyse_Pic(img_c)
 
 ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   geom_tile(aes(fill=rgb(med_red,med_green,med_blue)))+
   scale_fill_identity()+
   theme_minimal()
 
-
-ggplot(Cluster_result, aes(x= Xaxis, y = Yaxis))+
-  geom_tile(aes(fill=(sd_mean/(max(sd_mean)))),size = 7)+
-  scale_fill_gradient(low = "white", high = "black")+
+test <-Cluster_result[((Cluster_result$sd_mean/max(Cluster_result$sd_mean))>0.35),]
+ggplot(test, aes(x= Xaxis, y = Yaxis))+
+  geom_point()+
+  ylim(-250,0)+
   theme_minimal()
 
 
