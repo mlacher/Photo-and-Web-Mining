@@ -16,11 +16,13 @@ library(gridExtra)
 ---------------------------
 
 files = list.files(path = "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining", pattern="*.jpg")
+pb<-winProgressBar(title="Example progress bar", label="0% done",min=0,max=100, initial = 0, width = 300)
 Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
 #Cluster_result <- needs to be defined
-img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
+#img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
 i=1
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
+Cluster_result <-""
 while (i <= length(files)){
 location <- paste(Path,files[i],sep= "/")
 img <- readJPEG(location)
@@ -30,23 +32,31 @@ x_Size<-length(x_Pixel)
 y_Size<-length(y_Pixel)
 x_Grid<-Div_Raster(x_Size, 20)
 y_Grid<-Div_Raster(y_Size, 18)
-
+setWinProgressBar(pb,i/(length(files))*100)
 img_c<-Clustered_Pic(img,y_Size,x_Size)
 Pic_result<-Analyse_Pic(img_c)
 Pic_result<- cbind.data.frame(Pic_result,(Pic_result$sd_mean/max(Pic_result$sd_mean)) ,files[i],x_Size/y_Size)
 
 Cluster_result <- rbind.data.frame(Cluster_result,Pic_result)
+
+
 i = i+1
+
+Pic_result<-""
 }
 
+close(pb)
+
 Cluster_result <- na.omit(Cluster_result)
+
+
 ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   geom_tile(aes(fill=rgb(med_red,med_green,med_blue)))+
   scale_fill_identity()+
   theme_minimal()
 
 
-test <-Cluster_result[(Cluster_result$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`> 0.40),]
+test <-Cluster_result[(Cluster_result$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`> 0.45),]
 ggplot(test, aes(x= Xaxis, y = Yaxis, group = `files[i]`))+
   geom_tile(aes(fill=`files[i]`))+
   ylim(-18,0)+
