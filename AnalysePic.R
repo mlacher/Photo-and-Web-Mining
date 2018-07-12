@@ -55,8 +55,9 @@ ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
 
 
 test <-Cluster_result[(Cluster_result$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`> 0.5),]
+#neu<-describeBy(test$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`, test$Xaxis, test$Yaxis, mat= TRUE)
 ggplot(test, aes(x= Xaxis, y = Yaxis, group = `files[i]`))+
-  geom_point(aes(fill=`files[i]`))+
+  geom_point(aes(shape=`files[i]`))+
   ylim(-18,0)+
   theme_minimal()
 
