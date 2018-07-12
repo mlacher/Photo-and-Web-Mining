@@ -46,7 +46,7 @@ ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   theme_minimal()
 
 
-test <-Cluster_result[((Cluster_result$sd_mean/max(Cluster_result$sd_mean))>0.3),]
+test <-Cluster_result[(Cluster_result$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`> 0.40),]
 ggplot(test, aes(x= Xaxis, y = Yaxis, group = `files[i]`))+
   geom_tile(aes(fill=`files[i]`))+
   ylim(-18,0)+
