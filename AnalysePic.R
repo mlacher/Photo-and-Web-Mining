@@ -24,8 +24,19 @@ Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
 i=1
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 Cluster_result  <- data.frame(File=character()) 
+img_h <- array(1,dim = c(y_Size,x_Size,1))
 
-rgb2hsv(img[,1,1],img[,1,2],img[,1,3],1)
+
+while (i<= y_Size){
+img_hsv<-t(rgb2hsv(img[i,,1],img[i,,2],img[i,,3],1))
+img_h[i]<- img_hsv[,1]
+#img_s<-img_hsv[2,]
+#img_v<-img_hsv[3,]
+  i = i +1;
+
+}
+testt <-  as.array(img_h,dim = c(y_Size,x_Size,1))
+
 
 while (i <= length(files)){
 location <- paste(Path,files[i],sep= "/")
