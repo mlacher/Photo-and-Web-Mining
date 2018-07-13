@@ -24,6 +24,9 @@ Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
 i=1
 #img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
 Cluster_result  <- data.frame(File=character()) 
+
+rgb2hsv(img[,1,1],img[,1,2],img[,1,3],1)
+
 while (i <= length(files)){
 location <- paste(Path,files[i],sep= "/")
 img <- readJPEG(location)
