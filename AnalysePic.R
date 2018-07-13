@@ -7,6 +7,7 @@ library(psych)
 library(img.compression)
 library(fmsb)
 library(gridExtra)
+library(plyr)
 #####Functions##############################
 #1. Pic Format
 #2. Pic Structure
@@ -32,12 +33,12 @@ x_Size<-length(x_Pixel)
 y_Size<-length(y_Pixel)
 x_Grid<-Div_Raster(x_Size, 20)
 y_Grid<-Div_Raster(y_Size, 18)
-setWinProgressBar(pb,i/(length(files))*100)
+
 img_c<-Clustered_Pic(img,y_Size,x_Size)
 Pic_result<-Analyse_Pic(img_c)
 Pic_result<- cbind.data.frame(Pic_result,(Pic_result$sd_mean/max(Pic_result$sd_mean)) ,files[i],x_Size/y_Size)
 Cluster_result <- rbind.data.frame(Cluster_result,Pic_result)
-
+setWinProgressBar(pb,i/(length(files))*100)
 i = i+1
 
 Pic_result<-""
@@ -54,12 +55,24 @@ ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   theme_minimal()
 
 
-test <-Cluster_result[(Cluster_result$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`> 0.5),]
+test <-Cluster_result[(Cluster_result$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`> 0.35),]
+counts <- ddply(test, .(test$Xaxis, test$Yaxis), nrow)
+names(counts) <- c("xaxe", "yaxe", "Freq")
 #neu<-describeBy(test$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`, test$Xaxis, test$Yaxis, mat= TRUE)
-ggplot(test, aes(x= Xaxis, y = Yaxis, group = `files[i]`))+
-  geom_point(aes(shape=`files[i]`))+
+ggplot(counts, aes(x= xaxe, y = yaxe))+
+  geom_tile(aes(fill=Freq))+
+  scale_fill_distiller(palette = "Spectral")+
   ylim(-18,0)+
   theme_minimal()
+
+
+ggplot(Cluster_result)+
+  theme_bw() +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_blank())+
+  annotate("rect", xmin=0, xmax=1, ymin= 0,
+          ymax=as.numeric(levels(factor(Cluster_result$`x_Size/y_Size`)))-1, alpha=0.1, color="blue", fill="blue")
+
 
 
 
