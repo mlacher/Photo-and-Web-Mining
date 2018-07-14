@@ -15,13 +15,13 @@
 
 #This Function defines the Raster Size
 library(psych)
-Div_Raster<- function (Size, Div_const){
-  i=0
-  Div_count<- Size/Div_const
-  Div_Frame<-c(0)
-  while (i <= Div_const){
+Div_Raster<- function (Size, Div_count){
+  i=1
+  Div_const<- Size/Div_count
+  Div_Frame<- Div_const
+  while (i < Div_count){
     i=i+1;
-    Div_Frame=rbind(Div_Frame,Div_count+Div_Frame[i-1]);
+    Div_Frame=rbind(Div_Frame,Div_const+Div_Frame[i-1]);
   }
   return (Div_Frame)
 }

@@ -22,9 +22,18 @@ Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
 #Cluster_result <- needs to be defined
 #img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
 i=1
-#img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/sunset.jpg")
+x=1
+img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/InstaSave.jpg")
 Cluster_result  <- data.frame(File=character()) 
-img_h <- array(1,dim = c(y_Size,x_Size,3))
+img_h <- array(1,dim = c(y_Size,x_Size,4))
+
+
+mesh <- array(1,dim = c(24,16))
+i = 0
+while(i<= length(y_Grid)){
+  mesh[i,] <- paste(x_Grid,y_Grid[i],sep="/"); 
+  i=i+1;
+}
 
 
 while (i<= y_Size){
@@ -32,12 +41,22 @@ img_hsv<-t(rgb2hsv(img[i,,1],img[i,,2],img[i,,3],1))
 img_h[i,,1]<- img_hsv[,1]
 img_h[i,,2]<- img_hsv[,2]
 img_h[i,,3]<- img_hsv[,3]
-#img_s<-img_hsv[2,]
-#img_v<-img_hsv[3,]
-  i = i +1;
-
+i = i +1;
 }
-testt <-  as.array(img_h,dim = c(y_Size,x_Size,1))
+
+is.integer(2.5)
+
+a<-(x_Size)/16
+
+r_a<-round(a)
+b<- (y_Size)/24
+r_b<-round(b)
+
+daten_doppelt <- mesh[,rep(1:ncol(mesh),each=r_a)]
+daten_doppelt <- daten_doppelt[rep(1:nrow(daten_doppelt),each=r_b),]
+daten_doppelt <- daten_doppelt[if(!is.integer(b)){-c((y_Size+1):length(daten_doppelt[,1]))},
+                               if(!is.integer(a)){-c((x_Size+1):length(daten_doppelt[1,]))}]
+
 
 
 while (i <= length(files)){
@@ -49,6 +68,9 @@ x_Size<-length(x_Pixel)
 y_Size<-length(y_Pixel)
 x_Grid<-Div_Raster(x_Size, 16)
 y_Grid<-Div_Raster(y_Size, 24)
+
+
+
 
 img_c<-Clustered_Pic(img,y_Size,x_Size)
 Pic_result<-Analyse_Pic(img_c)
