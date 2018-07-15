@@ -16,14 +16,18 @@ library(plyr)
 ############################################MAIN################################################
 ---------------------------
 
-files = list.files(path = "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining", pattern="*.jpg")
+
 pb<-winProgressBar(title="Example progress bar", label="progress bar",min=0,max=100, initial = 0, width = 300)
-Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
-#Cluster_result <- needs to be defined
+
+#Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
+Path <- "E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/"
+
+files = list.files(path = Path, pattern="*.jpg")
+
 #img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
+#img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/InstaSave[2].jpg")
 
 
-img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/InstaSave[2].jpg")
 Cluster_result  <- data.frame(File=character())
 
 
