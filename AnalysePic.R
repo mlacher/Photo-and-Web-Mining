@@ -21,13 +21,13 @@ pb<-winProgressBar(title="Example progress bar", label="progress bar",min=0,max=
 Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
 #Cluster_result <- needs to be defined
 #img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
-i=1
-x=1
-img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/InstaSave.jpg")
+
+
+img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/InstaSave[2].jpg")
 Cluster_result  <- data.frame(File=character())
 
 
-
+i=1
 while (i <= length(files)){
 location <- paste(Path,files[i],sep= "/")
 img <- readJPEG(location)
@@ -38,14 +38,13 @@ Mesh <-Div_Raster(x_Size, y_Size,16,24)
 sc_Mesh<- Scale_Mesh(x_Size,y_Size,16,24,Mesh)
 #convert rgb to hsv
 img_hsv<- pic_HSV(x_Size,y_Size,img)
-img_hsv[,,4]<- sc_mesh
+img_hsv[,,4]<- sc_Mesh
 #pic analyse
 Pic_result<-Analyse_Pic(img_hsv)
 Pic_result<- cbind.data.frame(Pic_result,(Pic_result$sd_mean/max(Pic_result$sd_mean)) ,files[i],x_Size/y_Size)
 Cluster_result <- rbind.data.frame(Cluster_result,Pic_result)
 setWinProgressBar(pb,i/(length(files))*100)
 i = i+1
-
 Pic_result<-""
 }
 close(pb)

@@ -55,8 +55,8 @@ sc_mesh <- mesh[,rep(1:ncol(mesh),each=r_a)]
   }
 b<- (Size_y)/Div_count_y
 m_b<-Size_y%%Div_count_y
-sc_mesh <- sc_mesh[rep(1:nrow(sc_mesh),each=r_b),]
 r_b<-round(b)
+sc_mesh <- sc_mesh[rep(1:nrow(sc_mesh),each=r_b),]
   if(m_b){
    sc_mesh<-sc_mesh[-c((Size_y+1):length(sc_mesh[,1])),]
   }
@@ -103,15 +103,11 @@ Analyse_Pic <- function (Pic){
                                    Cluster_result3$sd/Cluster_result3$median,
                                    RowCol1
   )
-  colnames(Cluster_result)<-c("med_red","med_green","med_blue","sd_red","sd_green","sd_blue","Xaxis","Yaxis")
+  colnames(Cluster_result)<-c("hue","sat","val","sd_hue","sd_sat","sd_val","Xaxis","Yaxis")
   Cluster_result$Yaxis<-Cluster_result$Yaxis*-1
-  Cluster_result<-cbind.data.frame(Cluster_result,(Cluster_result$sd_red+
-                                                   Cluster_result$sd_green+
-                                                   Cluster_result$sd_blue)/3)
-  colnames(Cluster_result)<-c("med_red","med_green","med_blue",
-                            "sd_red","sd_green","sd_blue",
-                            "Xaxis","Yaxis","sd_mean")
-  Cluster_result$sd_mean[is.infinite(Cluster_result$sd_mean)]<-0
+  Cluster_result<-cbind.data.frame(Cluster_result,Cluster_result$sd_sat)
+  colnames(Cluster_result)<-c("hue","sat","val","sd_hue","sd_sat","sd_val","Xaxis","Yaxis","sd_tbd")
+  Cluster_result$sd_tbd[is.infinite(Cluster_result$sd_tbd)]<-0
   return(Cluster_result)
 }
 #
