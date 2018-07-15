@@ -8,6 +8,8 @@ library(img.compression)
 library(fmsb)
 library(gridExtra)
 library(plyr)
+library(tidyverse)
+
 #####Functions##############################
 #1. Pic Format
 #2. Pic Structure
@@ -55,24 +57,35 @@ close(pb)
 
 
 
-
-ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
-  geom_tile(aes(fill=med_green))+
-  #scale_fill_identity()+
+##color distribution
+ggplot(Cluster_result, aes(x=hue))+
+  geom_histogram(aes(fill=hsv(Cluster_result$hue,0.5, 0.5)))+
+  #geom_histogram(aes(fill = "Red"))+
+  scale_fill_identity()+
+  ylim(-1000,1800) +
   theme_minimal()
+  #+coord_polar(start = 0)
 
 
-test <-Cluster_result[(Cluster_result$val > 0.5),]
-counts <- ddply(test, .(test$Xaxis, test$Yaxis), nrow)
-names(counts) <- c("xaxe", "yaxe", "Freq")
 
-ggplot(counts, aes(x= xaxe, y = yaxe))+
+
+
+
+
+
+
+
+##pic brigthness distribution
+Val <-Cluster_result[(Cluster_result$val > 0.5),]
+Val.counts <- ddply(Val, .(Val$Xaxis, Val$Yaxis), nrow)
+names(Val.counts) <- c("xaxe", "yaxe", "Freq")
+ggplot(Val.counts, aes(x= xaxe, y = yaxe))+
   geom_tile(aes(fill=Freq))+
   scale_fill_distiller(palette = "Spectral")+
   ylim(-24,0)+
   theme_minimal()
 
-
+##pic xy size
 ggplot(Cluster_result)+
   theme_bw() +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),

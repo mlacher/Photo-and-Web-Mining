@@ -98,9 +98,9 @@ Analyse_Pic <- function (Pic){
   Cluster_result <- cbind.data.frame(Cluster_result1$median,
                                    Cluster_result2$median,
                                    Cluster_result3$median,
-                                   Cluster_result1$sd/Cluster_result1$median,
-                                   Cluster_result2$sd/Cluster_result2$median,
-                                   Cluster_result3$sd/Cluster_result3$median,
+                                   Cluster_result1$sd,
+                                   Cluster_result2$sd,
+                                   Cluster_result3$sd,
                                    RowCol1
   )
   colnames(Cluster_result)<-c("hue","sat","val","sd_hue","sd_sat","sd_val","Xaxis","Yaxis")
