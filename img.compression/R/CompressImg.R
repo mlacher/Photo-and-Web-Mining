@@ -13,50 +13,79 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-#This Function defines the Raster Size
+#
+###################This Function defines the Raster Size
+#
 library(psych)
-Div_Raster<- function (Size, Div_count){
+Div_Raster<- function (Size_x,Size_y, Div_count_x,Div_count_y){
   i=1
-  Div_const<- Size/Div_count
-  Div_Frame<- Div_const
-  while (i < Div_count){
+  Div_const_x<- Size_x/Div_count_x
+  Div_Frame_x<- Div_const_x
+  while (i < Div_count_x){
     i=i+1;
-    Div_Frame=rbind(Div_Frame,Div_const+Div_Frame[i-1]);
+    Div_Frame_x=rbind(Div_Frame_x,Div_const_x+Div_Frame_x[i-1]);
   }
-  return (Div_Frame)
+  i=1
+  Div_const_y<- Size_y/Div_count_y
+  Div_Frame_y<- Div_const_y
+  while (i < Div_count_y){
+    i=i+1;
+    Div_Frame_y=rbind(Div_Frame_y,Div_const_y+Div_Frame_y[i-1]);
+  }
+
+  mesh <- array(1,dim = c(Div_count_y,Div_count_x))
+  i = 0
+  while(i<= length(Div_Frame_y)){
+    mesh[i,] <- paste(Div_Frame_x,Div_Frame_y[i],sep="/");
+    i=i+1;
+  }
+  return (mesh)
 }
 
-#Create 4th Dimension including Raster
-Clustered_Pic<- function(Pic,y_Size,x_Size){
-  newArray <- c(0)
-  Raster_Pic<-array(c(Pic,newArray),dim = c(y_Size,x_Size,4))
-  i_piy<-0
-  while(i_piy<= y_Size){ 'move on y axis'
-    i_pix = 0;
-    while (i_pix<= x_Size){ 'move on x axis'
-      i_grid = 0;
-      while(i_grid< length(x_Grid)){ 'check which raster in X'
-        if((i_pix >= (x_Grid[i_grid]))&&(i_pix < (x_Grid[i_grid+1]))){ 'part of a x raster'
-          x_CharPos<- i_grid;
-        }
-        i_grid = i_grid+1;'increment raster x value'
-      }
-      i_grid = 0;
-      while(i_grid< length(y_Grid)){ 'check which raster in y'
-        if((i_piy >= (y_Grid[i_grid]))&&(i_piy < (y_Grid[i_grid+1]))){ 'part of a y raster'
-          y_CharPos<-  i_grid;
-        }
-        i_grid = i_grid+1;'increment raster y value'
-      }
-      Raster_Pic[i_piy,i_pix,4]<- paste(x_CharPos,y_CharPos,sep="/");
-      i_pix = i_pix +1;
-    }
-    i_piy = i_piy+1;
+#
+#####################Scale Mesh
+#
+Scale_Mesh<- function(Size_x, Size_y,Div_count_x,Div_count_y, mesh){
+a<-(Size_x)/Div_count_x
+m_a<-Size_x%%Div_count_x
+r_a<-round(a)
+sc_mesh <- mesh[,rep(1:ncol(mesh),each=r_a)]
+  if(m_a){
+    sc_mesh<-sc_mesh[,-c((Size_x+1):length(sc_mesh[1,])) ]
   }
-  return(Raster_Pic)
+b<- (Size_y)/Div_count_y
+m_b<-Size_y%%Div_count_y
+sc_mesh <- sc_mesh[rep(1:nrow(sc_mesh),each=r_b),]
+r_b<-round(b)
+  if(m_b){
+   sc_mesh<-sc_mesh[-c((Size_y+1):length(sc_mesh[,1])),]
+  }
+return(sc_mesh)
 }
 
-#to the math
+
+
+#
+############################Change RBG to HSV
+#
+pic_HSV<- function(Size_x,Size_y,img){
+
+img_h <- array(1,dim = c(Size_y,Size_x,4))
+i=1
+  while (i<= Size_y){
+    img_hsv<-t(rgb2hsv(img[i,,1],img[i,,2],img[i,,3],1))
+    img_h[i,,1]<- img_hsv[,1]
+    img_h[i,,2]<- img_hsv[,2]
+    img_h[i,,3]<- img_hsv[,3]
+    i = i +1;
+  }
+return(img_h)
+}
+
+
+#
+#do the math#########################################
+#
 Analyse_Pic <- function (Pic){
   library(psych)
   Cluster_result1<-describeBy(as.numeric(Pic[,,1]), group = Pic[,,4],mat=TRUE)
@@ -85,3 +114,6 @@ Analyse_Pic <- function (Pic){
   Cluster_result$sd_mean[is.infinite(Cluster_result$sd_mean)]<-0
   return(Cluster_result)
 }
+#
+##########################################
+#

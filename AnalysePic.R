@@ -24,56 +24,23 @@ Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining"
 i=1
 x=1
 img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/InstaSave.jpg")
-Cluster_result  <- data.frame(File=character()) 
-img_h <- array(1,dim = c(y_Size,x_Size,4))
-
-
-mesh <- array(1,dim = c(24,16))
-i = 0
-while(i<= length(y_Grid)){
-  mesh[i,] <- paste(x_Grid,y_Grid[i],sep="/"); 
-  i=i+1;
-}
-
-
-while (i<= y_Size){
-img_hsv<-t(rgb2hsv(img[i,,1],img[i,,2],img[i,,3],1))
-img_h[i,,1]<- img_hsv[,1]
-img_h[i,,2]<- img_hsv[,2]
-img_h[i,,3]<- img_hsv[,3]
-i = i +1;
-}
-
-is.integer(2.5)
-
-a<-(x_Size)/16
-
-r_a<-round(a)
-b<- (y_Size)/24
-r_b<-round(b)
-
-daten_doppelt <- mesh[,rep(1:ncol(mesh),each=r_a)]
-daten_doppelt <- daten_doppelt[rep(1:nrow(daten_doppelt),each=r_b),]
-daten_doppelt <- daten_doppelt[if(!is.integer(b)){-c((y_Size+1):length(daten_doppelt[,1]))},
-                               if(!is.integer(a)){-c((x_Size+1):length(daten_doppelt[1,]))}]
+Cluster_result  <- data.frame(File=character())
 
 
 
 while (i <= length(files)){
 location <- paste(Path,files[i],sep= "/")
 img <- readJPEG(location)
-x_Pixel<-img[1,,1]
-y_Pixel<-img[,1,1]
-x_Size<-length(x_Pixel)
-y_Size<-length(y_Pixel)
-x_Grid<-Div_Raster(x_Size, 16)
-y_Grid<-Div_Raster(y_Size, 24)
-
-
-
-
-img_c<-Clustered_Pic(img,y_Size,x_Size)
-Pic_result<-Analyse_Pic(img_c)
+x_Size<-length(img[1,,1])
+y_Size<-length(img[,1,1])
+#create mesh
+Mesh <-Div_Raster(x_Size, y_Size,16,24)
+sc_Mesh<- Scale_Mesh(x_Size,y_Size,16,24,Mesh)
+#convert rgb to hsv
+img_hsv<- pic_HSV(x_Size,y_Size,img)
+img_hsv[,,4]<- sc_mesh
+#pic analyse
+Pic_result<-Analyse_Pic(img_hsv)
 Pic_result<- cbind.data.frame(Pic_result,(Pic_result$sd_mean/max(Pic_result$sd_mean)) ,files[i],x_Size/y_Size)
 Cluster_result <- rbind.data.frame(Cluster_result,Pic_result)
 setWinProgressBar(pb,i/(length(files))*100)
@@ -86,9 +53,9 @@ close(pb)
 
 
 
-ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
-  geom_tile(aes(fill=rgb(med_red,med_green,med_blue)))+
-  scale_fill_identity()+
+ggplot(Pic_result , aes(x=Xaxis,y=Yaxis))+
+  geom_tile(aes(fill=med_green))+
+  #scale_fill_identity()+
   theme_minimal()
 
 
