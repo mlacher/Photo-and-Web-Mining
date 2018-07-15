@@ -48,14 +48,14 @@ Div_Raster<- function (Size_x,Size_y, Div_count_x,Div_count_y){
 Scale_Mesh<- function(Size_x, Size_y,Div_count_x,Div_count_y, mesh){
 a<-(Size_x)/Div_count_x
 m_a<-Size_x%%Div_count_x
-r_a<-round(a)
+r_a<-ceiling(a)
 sc_mesh <- mesh[,rep(1:ncol(mesh),each=r_a)]
   if(m_a){
     sc_mesh<-sc_mesh[,-c((Size_x+1):length(sc_mesh[1,])) ]
   }
 b<- (Size_y)/Div_count_y
 m_b<-Size_y%%Div_count_y
-r_b<-round(b)
+r_b<-ceiling(b)
 sc_mesh <- sc_mesh[rep(1:nrow(sc_mesh),each=r_b),]
   if(m_b){
    sc_mesh<-sc_mesh[-c((Size_y+1):length(sc_mesh[,1])),]

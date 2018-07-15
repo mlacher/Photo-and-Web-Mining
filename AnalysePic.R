@@ -45,7 +45,7 @@ img_hsv<- pic_HSV(x_Size,y_Size,img)
 img_hsv[,,4]<- sc_Mesh
 #pic analyse
 Pic_result<-Analyse_Pic(img_hsv)
-Pic_result<- cbind.data.frame(Pic_result,(Pic_result$sd_mean/max(Pic_result$sd_mean)) ,files[i],x_Size/y_Size)
+Pic_result<- cbind.data.frame(Pic_result,(Pic_result$sd_tbd/max(Pic_result$sd_tbd)) ,files[i],x_Size/y_Size)
 Cluster_result <- rbind.data.frame(Cluster_result,Pic_result)
 setWinProgressBar(pb,i/(length(files))*100)
 i = i+1
@@ -56,16 +56,16 @@ close(pb)
 
 
 
-ggplot(Pic_result , aes(x=Xaxis,y=Yaxis))+
+ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   geom_tile(aes(fill=med_green))+
   #scale_fill_identity()+
   theme_minimal()
 
 
-test <-Cluster_result[(Cluster_result$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`> 0.6),]
+test <-Cluster_result[(Cluster_result$sd_sat > 0.5),]
 counts <- ddply(test, .(test$Xaxis, test$Yaxis), nrow)
 names(counts) <- c("xaxe", "yaxe", "Freq")
-neu<-describeBy(test$`(Pic_result$sd_mean/max(Pic_result$sd_mean))`, test$Xaxis, test$Yaxis, mat= TRUE)
+
 ggplot(counts, aes(x= xaxe, y = yaxe))+
   geom_tile(aes(fill=Freq))+
   scale_fill_distiller(palette = "Spectral")+
