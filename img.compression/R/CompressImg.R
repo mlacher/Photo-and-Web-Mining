@@ -20,17 +20,17 @@ library(psych)
 Div_Raster<- function (Size_x,Size_y, Div_count_x,Div_count_y){
   i=1
   Div_const_x<- Size_x/Div_count_x
-  Div_Frame_x<- Div_const_x
+  Div_Frame_x<- i
   while (i < Div_count_x){
     i=i+1;
-    Div_Frame_x=rbind(Div_Frame_x,Div_const_x+Div_Frame_x[i-1]);
+    Div_Frame_x=rbind(Div_Frame_x,i);
   }
   i=1
   Div_const_y<- Size_y/Div_count_y
-  Div_Frame_y<- Div_const_y
+  Div_Frame_y<- i
   while (i < Div_count_y){
     i=i+1;
-    Div_Frame_y=rbind(Div_Frame_y,Div_const_y+Div_Frame_y[i-1]);
+    Div_Frame_y=rbind(Div_Frame_y,i);
   }
 
   mesh <- array(1,dim = c(Div_count_y,Div_count_x))

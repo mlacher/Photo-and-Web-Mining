@@ -62,7 +62,7 @@ ggplot(Cluster_result , aes(x=Xaxis,y=Yaxis))+
   theme_minimal()
 
 
-test <-Cluster_result[(Cluster_result$sd_sat > 0.5),]
+test <-Cluster_result[(Cluster_result$val > 0.5),]
 counts <- ddply(test, .(test$Xaxis, test$Yaxis), nrow)
 names(counts) <- c("xaxe", "yaxe", "Freq")
 
