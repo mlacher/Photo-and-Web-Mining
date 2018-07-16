@@ -21,8 +21,9 @@ library(plyr)
 
 pb<-winProgressBar(title="Example progress bar", label="progress bar",min=0,max=100, initial = 0, width = 300)
 
-Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
-#Path <- "E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
+#Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
+#
+Path <- "E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
 
 files = list.files(path = Path, pattern="*.jpg")
 
@@ -71,7 +72,13 @@ ggplot(Cluster_result, aes (x= hue))+
   #geom_tile(aes(fill=hsv(hue,0.5, 0.5)))+
   scale_fill_identity()+
   #ylim(-1000,1800) +
-  theme_minimal()
+  theme_minimal()+
+  theme(panel.border = element_blank(),
+        panel.grid.minor = element_blank())+
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.x=element_blank())
+
   #+coord_polar(start = 0)
 
 ##pic brigthness distribution
@@ -82,7 +89,15 @@ ggplot(Val.counts, aes(x= xaxe, y = yaxe))+
   geom_tile(aes(fill=Freq))+
   scale_fill_distiller(palette = "Spectral")+
   ylim(-24,0)+
-  theme_minimal()
+  theme_minimal()+
+  theme(panel.border = element_blank(),
+        panel.grid.minor = element_blank(),panel.grid.major = element_blank())+
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.title.x=element_blank()
+        )
 
 ##pic xy size
 
