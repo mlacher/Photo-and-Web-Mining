@@ -26,9 +26,6 @@ Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
 
 files = list.files(path = Path, pattern="*.jpg")
 
-#img <- readJPEG("C:/Users/maximilian.lacher/Downloads/test.jpg")
-#img <- readJPEG("E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/InstaSave[2].jpg")
-
 
 Cluster_result  <- data.frame(File=character())
 
@@ -58,15 +55,20 @@ close(pb)
 
 
 ##test
-ggplot(Cluster_result, aes (x= `x_Size/y_Size`))+
-  geom_histogram()
+Sat <-Cluster_result[(Cluster_result$sd_sat > 0.5),]
+Sat.counts <- ddply(Sat, .(Sat$Xaxis, Sat$Yaxis), nrow)
+names(Sat.counts) <- c("xsat", "ysat", "satFreq")
+ggplot(Sat.counts, aes (x=xsat, y = ysat))+
+  geom_tile(aes(fill=satFreq))+
+  scale_fill_distiller(palette = "Spectral")+
+  theme_minimal()
 
 
 
 ##color distribution
-ggplot(Cluster_result, aes(x=hue))+
-  geom_histogram(aes(fill=hsv(Cluster_result$hue,0.5, 0.5)))+
-  #geom_histogram(aes(fill = "Red"))+
+ggplot(Cluster_result, aes (x= hue))+
+  geom_histogram(aes(fill=hsv(hue,0.5, 0.5)))+
+  #geom_tile(aes(fill=hsv(hue,0.5, 0.5)))+
   scale_fill_identity()+
   #ylim(-1000,1800) +
   theme_minimal()
@@ -90,12 +92,11 @@ ggplot(Cluster_result)+
   theme_bw() +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_blank())+
-  annotate("rect", xmin=0, xmax=10, ymin= 0,
-          ymax= 10/(as.numeric(levels(factor(Cluster_result$`x_Size/y_Size`)))),
-          alpha=0.1, color = "BLUE",fill=levels(factor(Cluster_result$`x_Size/y_Size`)))+
-  ylim(0,15)+
-  xlim(0,10.5)
-
+  annotate("rect", xmin=0, xmax=1, ymin= 0,
+          ymax= 1/(as.numeric(levels(factor(Cluster_result$`x_Size/y_Size`)))),
+          alpha=0.1, color = "BLACK", fill = "WHITE")+
+  ylim(0,1.5)+
+  xlim(0,1.5)
 
 
 

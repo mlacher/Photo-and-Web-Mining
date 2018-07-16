@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#https://alstatr.blogspot.com/2014/09/r-image-analysis-using-ebimage.html\n#https://www.kandooadventures.com/news-and-views/top-10-instagram-landscape-photographers/\n\nlibrary(jpeg)\nlibrary(ggplot2)\nlibrary(psych)\nlibrary(img.compression)\nlibrary(fmsb)\nlibrary(gridExtra)\nlibrary(plyr)\n#library(tidyverse)\n\n#####Functions##############################\n#1. Pic Format\n#2. Pic Structure\n#3. Color Scheme\n\n############################################MAIN################################################\n---------------------------\n\n\npb<-winProgressBar(title=\"Example progress bar\", label=\"progress bar\",min=0,max=100, initial = 0, width = 300)\n\nPath <- \"C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/Pics\"\n#Path <- \"E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/Pics\"\n\nfiles = list.files(path = Path, pattern=\"*.jpg\")\n\n\nCluster_result  <- data.frame(File=character())\n\n\ni=1\nwhile (i <= length(files)){\n#read pic\n  location <- paste(Path,files[i],sep= \"/\")\n  img <- readJPEG(location)\n  x_Size<-length(img[1,,1])\n  y_Size<-length(img[,1,1])\n#create mesh\n  Mesh <-Div_Raster(x_Size, y_Size,20,24)\n  sc_Mesh<- Scale_Mesh(x_Size,y_Size,20,24,Mesh)\n#convert rgb to hsv\n  img_hsv<- pic_HSV(x_Size,y_Size,img)\n  img_hsv[,,4]<- sc_Mesh\n#pic analyse\n  Pic_result<-Analyse_Pic(img_hsv)\n  Pic_result<- cbind.data.frame(Pic_result,(Pic_result$sd_tbd/max(Pic_result$sd_tbd)) ,files[i],x_Size/y_Size)\n  Cluster_result <- rbind.data.frame(Cluster_result,Pic_result)\n  setWinProgressBar(pb,i/(length(files))*100)\ni = i+1\nPic_result<-\"\"\n}\nclose(pb)\n\n\n##test\nSat <-Cluster_result[(Cluster_result$sd_sat > 0.5),]\nSat.counts <- ddply(Sat, .(Sat$Xaxis, Sat$Yaxis), nrow)\nnames(Sat.counts) <- c(\"xsat\", \"ysat\", \"satFreq\")\nggplot(Sat.counts, aes (x=xsat, y = ysat))+\n  geom_tile(aes(fill=satFreq))+\n  scale_fill_distiller(palette = \"Spectral\")+\n  theme_minimal()\n\n\n\n##color distribution\nggplot(Cluster_result, aes (x= hue))+\n  geom_histogram(aes(fill=hsv(hue,0.5, 0.5)))+\n  #geom_tile(aes(fill=hsv(hue,0.5, 0.5)))+\n  scale_fill_identity()+\n  #ylim(-1000,1800) +\n  theme_minimal()\n  #+coord_polar(start = 0)\n\n##pic brigthness distribution\nVal <-Cluster_result[(Cluster_result$val > 0.5),]\nVal.counts <- ddply(Val, .(Val$Xaxis, Val$Yaxis), nrow)\nnames(Val.counts) <- c(\"xaxe\", \"yaxe\", \"Freq\")\nggplot(Val.counts, aes(x= xaxe, y = yaxe))+\n  geom_tile(aes(fill=Freq))+\n  scale_fill_distiller(palette = \"Spectral\")+\n  ylim(-24,0)+\n  theme_minimal()\n\n##pic xy size\n\nSize.counts <- ddply(Cluster_result, .(Cluster_result$`x_Size/y_Size`, nrow))\nnames(Val.counts) <- c(\"xaxe\", \"yaxe\", \"Freq\")\nggplot(Cluster_result)+\n  theme_bw() +\n  theme(panel.border = element_blank(), panel.grid.major = element_blank(),\n          panel.grid.minor = element_blank(), axis.line = element_blank())+\n  annotate(\"rect\", xmin=0, xmax=1, ymin= 0,\n          ymax= 1/(as.numeric(levels(factor(Cluster_result$`x_Size/y_Size`)))),\n          alpha=0.1, color = \"BLACK\", fill = \"WHITE\")+\n  ylim(0,1.5)+\n  xlim(0,1.5)\n\n\n\ncombo.box <- grid.arrange(p1,p2, nrow = 2)\n\n#this will display your image to test you read it correctly\nif(exists(\"rasterImage\")){\n  plot(1:2, type='n')\n  rasterImage(img,1,1,2,2)\n}\n\n\n",
+    "created" : 1531211584076.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "460264202",
+    "id" : "5932CA15",
+    "lastKnownWriteTime" : 1531745881,
+    "last_content_update" : 1531745881251,
+    "path" : "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/AnalysePic.R",
+    "project_path" : null,
+    "properties" : {
+        "notebook_format" : "html_document"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
