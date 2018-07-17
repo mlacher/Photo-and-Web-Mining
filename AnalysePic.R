@@ -21,9 +21,9 @@ library(plyr)
 
 pb<-winProgressBar(title="Example progress bar", label="progress bar",min=0,max=100, initial = 0, width = 300)
 
-#Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
+Path <- "C:/Users/maximilian.lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
 #
-Path <- "E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
+#Path <- "E:/Users/lacher/Documents/GitHub/Photo-and-Web-Mining/Pics"
 
 files = list.files(path = Path, pattern="*.jpg")
 
@@ -56,12 +56,12 @@ close(pb)
 
 
 ##test
-Sat <-Cluster_result[(Cluster_result$sd_sat > 0.5),]
+Sat <-Cluster_result[(Cluster_result$sd_sat > 0.6),]
 Sat.counts <- ddply(Sat, .(Sat$Xaxis, Sat$Yaxis), nrow)
 names(Sat.counts) <- c("xsat", "ysat", "satFreq")
 ggplot(Sat.counts, aes (x=xsat, y = ysat))+
-  geom_tile(aes(fill=satFreq))+
-  scale_fill_distiller(palette = "Spectral")+
+  geom_tile(aes(fill=hsv(0.65, (satFreq-min(satFreq))/(max(satFreq)-min(satFreq)), 0.9)))+
+  scale_fill_identity()+
   theme_minimal()
 
 
