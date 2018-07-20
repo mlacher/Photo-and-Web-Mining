@@ -60,15 +60,15 @@ Sat <-Cluster_result[(Cluster_result$sd_sat > 0.6),]
 Sat.counts <- ddply(Sat, .(Sat$Xaxis, Sat$Yaxis), nrow)
 names(Sat.counts) <- c("xsat", "ysat", "satFreq")
 ggplot(Sat.counts, aes (x=xsat, y = ysat))+
-  geom_tile(aes(fill=hsv(0.65, (satFreq-min(satFreq))/(max(satFreq)-min(satFreq)), 0.9)))+
+  geom_tile(aes(fill=hsv(0.65, (satFreq-min(satFreq))/(max(satFreq)-min(satFreq)), 0.8)))+
   scale_fill_identity()+
   theme_minimal()
 
 
 
 ##color distribution
-ggplot(Cluster_result, aes (x= hue))+
-  geom_histogram(aes(fill=hsv(hue,0.5, 0.5)))+
+ggplot(Cluster_result[Cluster_result$`files[i]` == "beautifuldestinations___BaGUlIjgFY____.jpg",], aes (x= hue))+
+  geom_histogram(aes(fill=hsv(hue,0.6, 0.5)))+
   #geom_tile(aes(fill=hsv(hue,0.5, 0.5)))+
   scale_fill_identity()+
   #ylim(-1000,1800) +
@@ -86,7 +86,7 @@ Val <-Cluster_result[(Cluster_result$val > 0.5),]
 Val.counts <- ddply(Val, .(Val$Xaxis, Val$Yaxis), nrow)
 names(Val.counts) <- c("xaxe", "yaxe", "Freq")
 ggplot(Val.counts, aes(x= xaxe, y = yaxe))+
-  geom_tile(aes(fill=Freq))+
+  geom_raster(aes(fill=Freq), interpolate = TRUE)+
   scale_fill_distiller(palette = "Spectral")+
   ylim(-24,0)+
   theme_minimal()+
@@ -99,7 +99,23 @@ ggplot(Val.counts, aes(x= xaxe, y = yaxe))+
         axis.title.x=element_blank()
         )
 
+
+
 ##pic xy size
+ggplot(Cluster_result[Cluster_result$`files[i]` == "earthpix___BdF57UOF-OW___.jpg",], aes(x= Xaxis, y = Yaxis))+
+  geom_tile(aes(fill=val))+
+  scale_fill_distiller(palette = "Spectral")+
+  #ylim(-24,0)+
+  theme_minimal()+
+  theme(panel.border = element_blank(),
+        panel.grid.minor = element_blank(),panel.grid.major = element_blank())+
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.title.x=element_blank()
+  )
+
 
 Size.counts <- ddply(Cluster_result, .(Cluster_result$`x_Size/y_Size`, nrow))
 names(Val.counts) <- c("xaxe", "yaxe", "Freq")
@@ -114,8 +130,7 @@ ggplot(Cluster_result)+
   xlim(0,1.5)
 
 
-
-combo.box <- grid.arrange(p1,p2, nrow = 2)
+beautifuldestinations___BaGUlIjgFY____.jpg
 
 #this will display your image to test you read it correctly
 if(exists("rasterImage")){
