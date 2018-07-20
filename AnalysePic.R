@@ -60,14 +60,14 @@ Sat <-Cluster_result[(Cluster_result$sd_sat > 0.6),]
 Sat.counts <- ddply(Sat, .(Sat$Xaxis, Sat$Yaxis), nrow)
 names(Sat.counts) <- c("xsat", "ysat", "satFreq")
 ggplot(Sat.counts, aes (x=xsat, y = ysat))+
-  geom_tile(aes(fill=hsv(0.65, (satFreq-min(satFreq))/(max(satFreq)-min(satFreq)), 0.8)))+
+  geom_raster(aes(fill=hsv(0.6, (satFreq-min(satFreq))/(max(satFreq)-min(satFreq)), 0.90)), interpolate = TRUE)+
   scale_fill_identity()+
   theme_minimal()
 
 
 
 ##color distribution
-ggplot(Cluster_result[Cluster_result$`files[i]` == "beautifuldestinations___BaGUlIjgFY____.jpg",], aes (x= hue))+
+ggplot(Cluster_result[Cluster_result$`files[i]` == "earthpix___BdF57UOF-OW___.jpg",], aes (x= hue))+
   geom_histogram(aes(fill=hsv(hue,0.6, 0.5)))+
   #geom_tile(aes(fill=hsv(hue,0.5, 0.5)))+
   scale_fill_identity()+
